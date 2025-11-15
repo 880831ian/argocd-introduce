@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-grpc-ingress
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: pin-yi-letsencrypt
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+spec:
+  ingressClassName: pin-yi
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: https
+      host: grpc-argocd.pin-yi.me
+  tls:
+    - hosts:
+        - grpc-argocd.pin-yi.me
+      secretName: argocd-ingress-grpc
